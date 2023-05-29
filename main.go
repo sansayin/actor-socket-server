@@ -46,7 +46,7 @@ func (this *SessionNew) Receive(context actor.Context) {
 	case *actor.Started:
 		log.Println("Sessions Start", msg)
 		context.Send(context.Parent(), this)
-		go this.connHandler(context)
+		go this.sessionHandler(context)
 	case *actor.Stopping:
 		(*this.conn).Close()
 	case *actor.Stopped:
@@ -54,7 +54,7 @@ func (this *SessionNew) Receive(context actor.Context) {
 	}
 }
 
-func (this *SessionNew) connHandler(context actor.Context) {
+func (this *SessionNew) sessionHandler(context actor.Context) {
 	buf := make([]byte, 1024)
 	for {
 		n, err := (*this.conn).Read(buf)
@@ -109,7 +109,6 @@ func (this *ServiceActor) hanlder(context actor.Context) {
 			log.Println(pid, err)
 		}
 	}
-	log.Println("ServiceActor Handler Exit")
 }
 
 func init() {
